@@ -1,0 +1,7 @@
+*.exe
+*.o
+*.obj
+*.pdf
+/chess
+/build/
+.DS_Store
