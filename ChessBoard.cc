@@ -9,6 +9,7 @@ using Student::ChessPiece;
 using Student::PawnPiece;
 using Student::RookPiece;
 using Student::BishopPiece;
+using Student::KingPiece;
 
 ChessBoard::ChessBoard(int numRow, int numCol)
 {
@@ -49,6 +50,9 @@ void ChessBoard::createChessPiece(Color col, Type ty, int startRow, int startCol
         case Bishop:
             piece = new BishopPiece(*this, col, startRow, startColumn);
             break;
+        case King:
+            piece = new KingPiece(*this, col, startRow, startColumn);
+            break;
         default:
             return;
     }
@@ -68,7 +72,33 @@ bool ChessBoard::isValidMove(int fromRow, int fromColumn, int toRow, int toColum
     ChessPiece* piece = board.at(fromRow).at(fromColumn);
     if (piece == nullptr) {return false;}
 
-    return piece->canMoveToLocation(toRow, toColumn);
+    if (!piece->canMoveToLocation(toRow, toColumn)) {return false;}
+
+    ChessPiece* captured = board.at(toRow).at(toColumn);
+    board.at(toRow).at(toColumn) = piece;
+    board.at(fromRow).at(fromColumn) = nullptr;
+    piece->setPosition(toRow, toColumn);
+
+    bool valid = true;
+
+    for (int row = 0; row < numRows; row++)
+    {
+        for (int column = 0; column < numCols; column++)
+        {
+            ChessPiece* king = board.at(row).at(column);
+            if (king != nullptr && king->getColor() == piece->getColor() &&
+                king->getType() == King && isPieceUnderThreat(row, column))
+            {
+                valid = false;
+            }
+        }
+    }
+
+    board.at(fromRow).at(fromColumn) = piece;
+    board.at(toRow).at(toColumn) = captured;
+    piece->setPosition(fromRow, fromColumn);
+
+    return valid;
 }
 
 bool ChessBoard::movePiece(int fromRow, int fromColumn, int toRow, int toColumn)

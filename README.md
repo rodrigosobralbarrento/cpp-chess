@@ -4,11 +4,12 @@ A simple chess project written in C++17, using inheritance and virtual methods t
 
 ## Features
 
-- Pawn, rook, and bishop movement
+- Pawn, rook, bishop, and king movement
 - Configurable board dimensions
 - Move validation, blocked paths, and captures
 - Alternating turns, with White moving first
 - Detection of pieces under attack
+- Rejection of moves that leave your king in check
 
 ## Build and run
 
@@ -28,4 +29,4 @@ mingw32-make custom_tests
 
 The current `main.cc` creates a sample board and exits. The `ChessBoard` class provides methods to create pieces, validate and execute moves, and check whether a piece is under attack.
 
-King movement and check handling are planned.
+The project uses simplified rules without castling, en passant, or pawn promotion.
